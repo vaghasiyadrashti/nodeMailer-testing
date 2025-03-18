@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Email</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        form { max-width: 400px; margin: auto; text-align: left; }
+        label, input, textarea, button { width: 100%; margin-bottom: 10px; padding: 8px; }
+        button { background: blue; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Send an Email</h2>
+    <form id="emailForm">
+        <label>To:</label>
+        <input type="email" id="to" placeholder="Recipient Email" required>
+
+        <label>Subject:</label>
+        <input type="text" id="subject" placeholder="Email Subject" required>
+
+        <label>Message:</label>
+        <textarea id="message" placeholder="Enter your message" required></textarea>
+
+        <button type="button" onclick="sendEmail()">Send Email</button>
+    </form>
+
+    <script>
+        async function sendEmail() {
+            const to = document.getElementById("to").value;
+            const subject = document.getElementById("subject").value;
+            const message = document.getElementById("message").value;
+
+            if (!to || !subject || !message) {
+                alert("All fields are required!");
+                return;
+            }
+
+            const response = await fetch("/send-email", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ to, subject, message }),
+            });
+
+            const result = await response.json();
+            alert(result.message || result.error);
+        }
+    </script>
+</body>
+</html>
